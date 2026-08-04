@@ -1,0 +1,14 @@
+# .NET build output
+bin/
+obj/
+
+# .NET user-specific files
+*.user
+*.suo
+.vs/
+
+# Rider / JetBrains
+.idea/
+
+# OS
+.DS_Store
