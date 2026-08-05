@@ -1,7 +1,12 @@
 // Portfolio project
+
+using System.ComponentModel.DataAnnotations;
+
 public class Project
 {
     public int Id { get; set; }
+    
+    [MaxLength(20)]
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string? RepoUrl { get; set; }
