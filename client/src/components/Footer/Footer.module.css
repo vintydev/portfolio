@@ -1,0 +1,29 @@
+.footer
+{
+    margin-top: var(--space-7);
+    border-top: 1px solid var(--colour-line);
+}
+
+.inner
+{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: var(--content-max-width);
+    margin-inline: auto;
+    padding: var(--space-5) var(--space-6);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--colour-muted);
+}
+
+.footer a
+{
+    color: var(--colour-muted);
+}
+
+.footer a:hover,
+.footer a:focus-visible
+{
+    color: var(--colour-accent);
+}
