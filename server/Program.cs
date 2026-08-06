@@ -1,6 +1,5 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using VintyDev.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +20,7 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod());
 });
 
-builder.Services.AddScoped<IEmailSender, NoOpEmailSender>();
+builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
 
 var app = builder.Build();
 

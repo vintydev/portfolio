@@ -1,9 +1,10 @@
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using VintyDev.Api.Dto;
+using VintyDev.Api.Services;
 
 namespace VintyDev.Api.Controllers
 {
+    // API controller to handle sending emails 
     [ApiController]
     [Route("api/[controller]")]
     public class ContactController : ControllerBase
@@ -11,13 +12,15 @@ namespace VintyDev.Api.Controllers
         private readonly AppDbContext _db;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<ContactController> _logger;
+        private readonly string _notifyEmail;
 
-        // Inject DB, email sender, and logger
-        public ContactController(AppDbContext db, IEmailSender emailSender, ILogger<ContactController> logger)
+        // Inject DB, email sender, logger, and config
+        public ContactController(AppDbContext db, IEmailSender emailSender, ILogger<ContactController> logger, IConfiguration configuration)
         {
             _db = db;
             _emailSender = emailSender;
             _logger = logger;
+            _notifyEmail = configuration["Contact:NotifyEmail"] ?? throw new InvalidOperationException("Contact:NotifyEmail is not configured.");
         }
 
 
@@ -48,9 +51,8 @@ namespace VintyDev.Api.Controllers
             {
                 var subject = $"New contact from {request.Name}";
                 var body = $"<p><strong>Name:</strong> {request.Name}</p><p><strong>Email:</strong> {request.Email}</p><p>{System.Net.WebUtility.HtmlEncode(request.Message)}</p>";
-    
-                
-                await _emailSender.SendEmailAsync(request.Email, subject, body);
+
+                await _emailSender.SendEmailAsync(_notifyEmail, subject, body, replyTo: request.Email);
             }
             catch (Exception ex)
             {
