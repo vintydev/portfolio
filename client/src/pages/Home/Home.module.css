@@ -1,10 +1,11 @@
 .hero
 {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: var(--space-3);
-    min-height: calc(100dvh - var(--header-height));
+    min-height: calc(80dvh - var(--header-height));
     max-width: var(--content-max-width);
     margin-inline: auto;
     padding: var(--space-7) var(--space-6);
@@ -17,12 +18,19 @@
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: var(--colour-accent);
+    animation: heroFadeIn 0.5s ease-out both;
 }
 
 .heading
 {
-    font-size: 56px;
-    line-height: 1.1;
+    font-size: clamp(56px, 10vw, 112px);
+    line-height: 1.05;
+}
+
+.nameText
+{
+    display: block;
+    animation: heroFadeIn 0.5s ease-out 0.12s both;
 }
 
 .heading em
@@ -31,10 +39,97 @@
     color: var(--colour-accent);
 }
 
+.surname
+{
+    display: inline-block;
+    cursor: default;
+}
+
+/* max-width (not width) is what's animated: width:auto can't be transitioned, but a length like
+   max-width can, and overflow:hidden clips each letter to nothing while its cap is 0 */
+.dot,
+.letter
+{
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: bottom;
+    transition: max-width 0.5s ease, opacity 0.2s ease;
+}
+
+.dot
+{
+    max-width: 0.6em;
+    opacity: 1;
+    transition-delay: 0.2s; /* wait for the retracting letters to clear before the dot reappears */
+}
+
+.letter
+{
+    max-width: 0;
+    opacity: 0;
+}
+
+/* mouse-out reverses the order: the last letter (o) retracts first, working back to the first (u) */
+.letter:nth-child(1)
+{
+    transition-delay: 0.15s;
+}
+
+.letter:nth-child(2)
+{
+    transition-delay: 0.1s;
+}
+
+.letter:nth-child(3)
+{
+    transition-delay: 0.05s;
+}
+
+.letter:nth-child(4)
+{
+    transition-delay: 0s;
+}
+
+.surname:hover .dot
+{
+    max-width: 0;
+    opacity: 0;
+}
+
+.surname:hover .letter
+{
+    max-width: 1em;
+    opacity: 1;
+}
+
+/* each letter gets a longer delay than the last, so they open up left-to-right on hover.
+   the :hover selector makes these win (higher specificity) over the reversed delays above,
+   which take back over on mouse-out and retract right-to-left instead */
+.surname:hover .letter:nth-child(1)
+{
+    transition-delay: 0.05s;
+}
+
+.surname:hover .letter:nth-child(2)
+{
+    transition-delay: 0.1s;
+}
+
+.surname:hover .letter:nth-child(3)
+{
+    transition-delay: 0.15s;
+}
+
+.surname:hover .letter:nth-child(4)
+{
+    transition-delay: 0.2s;
+}
+
 .intro
 {
-    font-size: 18px;
+    font-size: 20px;
     max-width: 52ch;
+    animation: heroFadeIn 0.5s ease-out 0.24s both;
 }
 
 .heroCta
@@ -43,6 +138,32 @@
     flex-wrap: wrap;
     gap: var(--space-3);
     margin-top: var(--space-2);
+    animation: heroFadeIn 0.5s ease-out 0.36s both;
+}
+
+@keyframes heroFadeIn
+{
+    from
+    {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to
+    {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce)
+{
+    .tagline,
+    .nameText,
+    .intro,
+    .heroCta
+    {
+        animation: none;
+    }
 }
 
 .ctaPrimary,
@@ -89,6 +210,11 @@
     max-width: var(--content-max-width);
     margin-inline: auto;
     padding: var(--space-6);
+}
+
+.experience h2
+{
+    font-size: 40px;
 }
 
 .timeline
