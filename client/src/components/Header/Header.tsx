@@ -10,7 +10,7 @@ export function Header(): ReactElement
                 <Link to="/" className={styles.wordmark}>Vincenzo R.</Link>
                 <nav className={styles.nav}>
                     <Link to="/projects">Projects</Link>
-                    <Link to="/contact">Contact</Link>
+                    <a href="#contact">Contact</a>
                 </nav>
             </div>
         </header>

@@ -1,6 +1,7 @@
 import type { ReactElement } from "react";
 import { useProjects } from "../../hooks/useProjects";
 import { ProjectCard } from "../../components/ProjectCard/ProjectCard";
+import { ContactForm } from "../../components/ContactForm/ContactForm";
 import styles from "./Home.module.css";
 
 export function Home(): ReactElement
@@ -30,6 +31,14 @@ export function Home(): ReactElement
                         ))}
                     </div>
                 )}
+            </section>
+
+            <section id="contact" className={styles.contact} aria-labelledby="contact-heading">
+                <h2 id="contact-heading">Get in touch</h2>
+                <p className={styles.contactIntro}>
+                    Have a project in mind or just want to say hi? Send a message and I&rsquo;ll reply as soon as I can.
+                </p>
+                <ContactForm/>
             </section>
         </>
     );
