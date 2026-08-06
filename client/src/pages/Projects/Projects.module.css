@@ -1,0 +1,14 @@
+.projects
+{
+    max-width: var(--content-max-width);
+    margin-inline: auto;
+    padding: var(--space-7) var(--space-6);
+}
+
+.projectGrid
+{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-4);
+    margin-top: var(--space-5);
+}

@@ -7,6 +7,7 @@ import styles from "./Home.module.css";
 export function Home(): ReactElement
 {
     const { projects, isLoading, error } = useProjects();
+    const showProjects = import.meta.env.DEV || projects.length > 0;
 
     return (
         <>
@@ -18,20 +19,22 @@ export function Home(): ReactElement
                 </p>
             </section>
 
-            <section className={styles.projects} aria-labelledby="featured-projects-heading">
-                <h2 id="featured-projects-heading">Featured projects</h2>
+            {showProjects && (
+                <section className={styles.projects} aria-labelledby="featured-projects-heading">
+                    <h2 id="featured-projects-heading">Featured projects</h2>
 
-                {isLoading && <p>Loading projects&hellip;</p>}
-                {error && <p role="alert">{error}</p>}
+                    {isLoading && <p>Loading projects&hellip;</p>}
+                    {error && <p role="alert">{error}</p>}
 
-                {!isLoading && !error && (
-                    <div className={styles.projectGrid}>
-                        {projects.map((project) => (
-                            <ProjectCard key={project.id} project={project} />
-                        ))}
-                    </div>
-                )}
-            </section>
+                    {!isLoading && !error && (
+                        <div className={styles.projectGrid}>
+                            {projects.map((project) => (
+                                <ProjectCard key={project.id} project={project} />
+                            ))}
+                        </div>
+                    )}
+                </section>
+            )}
 
             <section id="contact" className={styles.contact} aria-labelledby="contact-heading">
                 <h2 id="contact-heading">Get in touch</h2>
