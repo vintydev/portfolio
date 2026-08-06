@@ -57,6 +57,7 @@ public static class SeedData
             Organisation = "TheGameCreators",
             Title = "Junior Programmer — Full Stack Mobile Development (React Native)",
             Location = "Remote",
+            LogoUrl = "/logos/the_game_creators_logo.png",
             StartDate = new DateOnly(2025, 9, 1),
             EndDate = null,
             Summary = "Architected, developed and delivered new features and enhancements across Theory 4 in 1 Test Kit and ADIHubb, building scalable React Native solutions for iOS and Android used by over one million learners and driving instructors.",

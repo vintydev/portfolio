@@ -8,6 +8,7 @@ public class ExperienceDto
 	public string Organisation { get; init; } = string.Empty;
 	public string Title { get; init; } = string.Empty;
 	public string? Location { get; init; }
+	public string? LogoUrl { get; init; }
 	public DateOnly StartDate { get; init; }
 	public DateOnly? EndDate { get; init; }
 	public string Summary { get; init; } = string.Empty;

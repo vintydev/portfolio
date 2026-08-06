@@ -1,10 +1,8 @@
 .item
 {
-    position: relative;
     display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-    padding-left: var(--space-5);
+    align-items: flex-start;
+    gap: var(--space-4);
     padding-bottom: var(--space-6);
 }
 
@@ -13,23 +11,47 @@
     padding-bottom: 0;
 }
 
-.item::before
+.content
 {
-    content: "";
-    position: absolute;
-    left: -5px;
-    top: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 0;
+}
+
+/* stand-in for entries with no logo: a small dot sitting near the timeline's connecting line */
+.marker
+{
+    flex-shrink: 0;
     width: 9px;
     height: 9px;
+    margin-top: 10px;
+    margin-left: 4px;
     border-radius: var(--radius-pill);
     background: var(--colour-bg);
     border: 2px solid var(--colour-muted);
 }
 
-.current::before
+.current .marker
 {
     border-color: var(--colour-accent);
     background: var(--colour-accent);
+}
+
+.logo
+{
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-sm);
+    object-fit: cover;
+    background: #ffffff;
+    border: 1px solid var(--colour-line);
+}
+
+.current .logo
+{
+    border-color: var(--colour-accent);
 }
 
 .dateRange
@@ -41,12 +63,18 @@
     color: var(--colour-accent);
 }
 
-.title
+.organisation
 {
-    font-size: 20px;
+    font-size: 24px;
+    transition: color 0.2s ease;
 }
 
-.meta
+.organisation:hover
+{
+    color: var(--colour-accent);
+}
+
+.role
 {
     font-family: var(--font-mono);
     font-size: 13px;

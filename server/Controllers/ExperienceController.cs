@@ -31,6 +31,7 @@ namespace VintyDev.Api.Controllers
                     Organisation = e.Organisation,
                     Title = e.Title,
                     Location = e.Location,
+                    LogoUrl = e.LogoUrl,
                     StartDate = e.StartDate,
                     EndDate = e.EndDate,
                     Summary = e.Summary,

@@ -7,6 +7,7 @@ export interface IExperience
     organisation: string;
     title: string;
     location: string | null;
+    logoUrl: string | null;
     startDate: string;
     endDate: string | null;
     summary: string;

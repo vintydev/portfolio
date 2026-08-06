@@ -21,6 +21,9 @@ public class Experience
     [MaxLength(150)]
     public string? Location { get; set; }
 
+    [MaxLength(500)]
+    public string? LogoUrl { get; set; }
+
     public DateOnly StartDate { get; set; }
     public DateOnly? EndDate { get; set; } // null = present
 
