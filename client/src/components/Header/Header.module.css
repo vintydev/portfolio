@@ -25,6 +25,7 @@
 .nav
 {
     display: flex;
+    align-items: center;
     gap: var(--space-5);
     font-family: var(--font-mono);
     font-size: 14px;
@@ -42,4 +43,19 @@
 .nav a:focus-visible
 {
     color: var(--colour-accent);
+}
+
+.contactLink
+{
+    color: var(--colour-accent);
+    border: 1px solid var(--colour-accent);
+    border-radius: var(--radius-pill);
+    padding: var(--space-1) var(--space-4);
+}
+
+.contactLink:hover,
+.contactLink:focus-visible
+{
+    color: var(--colour-accent-ink);
+    background: var(--colour-accent);
 }
