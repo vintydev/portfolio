@@ -1,0 +1,77 @@
+.nav
+{
+    position: fixed;
+    right: var(--space-6);
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+}
+
+.list
+{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.item
+{
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    text-decoration: none;
+}
+
+.label
+{
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--colour-accent);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    white-space: nowrap;
+}
+
+.item:hover .label,
+.item.active .label
+{
+    opacity: 1;
+}
+
+.dot
+{
+    display: block;
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-pill);
+    border: 2px solid var(--colour-line);
+    background: var(--colour-bg);
+    transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.item:hover .dot,
+.item.active .dot
+{
+    border-color: var(--colour-accent);
+}
+
+.item.active .dot
+{
+    background: var(--colour-accent);
+    transform: scale(1.2);
+}
+
+/* the rail needs open space beside the content to sit in without overlapping it */
+@media (max-width: 990px)
+{
+    .nav
+    {
+        display: none;
+    }
+}

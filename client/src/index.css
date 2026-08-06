@@ -48,6 +48,33 @@ body
     margin: 0;
 }
 
+/* Hide scrollbars globally but keep scrolling accessible */
+html,
+body
+{
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+}
+
+/* WebKit browsers */
+body::-webkit-scrollbar
+{
+    width: 0;
+    height: 0;
+}
+
+@media (pointer: fine) {
+    .hide-cursor {
+    cursor: none !important;
+    }
+    }
+
+/* Reserve space for overlay scrollbars where supported to avoid layout shift */
+html
+{
+    scrollbar-gutter: stable both-edges;
+}
+
 h1,
 h2,
 h3

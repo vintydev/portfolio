@@ -5,10 +5,22 @@
     flex-direction: column;
     justify-content: center;
     gap: var(--space-3);
-    min-height: calc(80dvh - var(--header-height));
+    /* Fill the viewport minus the header so the next section isn't visible until scroll */
+    height: calc(100dvh - var(--header-height));
+    min-height: calc(100dvh - var(--header-height));
     max-width: var(--content-max-width);
     margin-inline: auto;
     padding: var(--space-7) var(--space-6);
+}
+
+/* Fallback for browsers that don't support dynamic viewport units */
+@supports not (height: 100dvh)
+{
+    .hero
+    {
+        height: calc(100vh - var(--header-height));
+        min-height: calc(100vh - var(--header-height));
+    }
 }
 
 .tagline
@@ -132,13 +144,293 @@
     animation: heroFadeIn 0.5s ease-out 0.24s both;
 }
 
+/* Reveal helpers for sections: start hidden and slide up when active */
+.reveal
+{
+    opacity: 0;
+}
+
+@keyframes fadeInUp
+{
+    from
+    {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to
+    {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.revealVisible
+{
+    /* Keep container visible; animate children with staggered delays */
+    opacity: 1;
+}
+
+/* Staggered child animations: animate each direct child with increasing delay */
+.revealVisible > *:not(.no-reveal)
+{
+    opacity: 0;
+    animation: fadeInUp 680ms cubic-bezier(.2,.9,.3,1) both;
+}
+
+.revealVisible > *:nth-child(1)
+{
+    animation-delay: 0ms;
+}
+.revealVisible > *:nth-child(2)
+{
+    animation-delay: 120ms;
+}
+.revealVisible > *:nth-child(3)
+{
+    animation-delay: 240ms;
+}
+.revealVisible > *:nth-child(4)
+{
+    animation-delay: 360ms;
+}
+.revealVisible > *:nth-child(5)
+{
+    animation-delay: 480ms;
+}
+.revealVisible > *:nth-child(6)
+{
+    animation-delay: 600ms;
+}
+.revealVisible > *:nth-child(7)
+{
+    animation-delay: 720ms;
+}
+.revealVisible > *:nth-child(8)
+{
+    animation-delay: 840ms;
+}
+
+/* individual entries within a revealed timeline/grid stagger in on top of (not instead of) the
+   direct-child delay above, so each experience entry / project card pops in one after another
+   rather than the whole list appearing as a single block */
+.revealVisible .timeline > *,
+.revealVisible .projectGrid > *
+{
+    opacity: 0;
+    animation: fadeInUp 680ms cubic-bezier(.2,.9,.3,1) both;
+}
+
+.revealVisible .timeline > *:nth-child(1),
+.revealVisible .projectGrid > *:nth-child(1)
+{
+    animation-delay: 200ms;
+}
+.revealVisible .timeline > *:nth-child(2),
+.revealVisible .projectGrid > *:nth-child(2)
+{
+    animation-delay: 320ms;
+}
+.revealVisible .timeline > *:nth-child(3),
+.revealVisible .projectGrid > *:nth-child(3)
+{
+    animation-delay: 440ms;
+}
+.revealVisible .timeline > *:nth-child(4),
+.revealVisible .projectGrid > *:nth-child(4)
+{
+    animation-delay: 560ms;
+}
+.revealVisible .timeline > *:nth-child(n+5),
+.revealVisible .projectGrid > *:nth-child(n+5)
+{
+    animation-delay: 680ms;
+}
+
+@media (prefers-reduced-motion: reduce)
+{
+    .reveal,
+    .revealVisible,
+    .revealVisible > *,
+    .revealVisible .timeline > *,
+    .revealVisible .projectGrid > *
+    {
+        animation: none !important;
+        transform: none !important;
+        opacity: 1 !important;
+    }
+}
+
 .heroCta
 {
+    position: relative;
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-3);
     margin-top: var(--space-2);
     animation: heroFadeIn 0.5s ease-out 0.36s both;
+
+}
+
+/* hand-drawn outline that wraps all four CTA buttons, revealed while the LookingBadge is
+   hovered; feTurbulence/feDisplacementMap (defined once, above, as #sketchRough) roughens a
+   plain rounded border into a sketched line so it matches the badge's hand-drawn aesthetic */
+.heroCta::before
+{
+    content: "";
+    position: absolute;
+    inset: -14px -18px;
+    border: 2px solid var(--colour-accent);
+    border-radius: 26px;
+    opacity: 0;
+    filter: url(#sketchRough);
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    width: 70%;
+}
+
+.ctaHighlighted::before
+{
+    opacity: 0.75;
+}
+
+.filterDefs
+{
+    position: absolute;
+}
+
+/* arrow from the LookingBadge to the CTA row, revealed on badge hover; drawn as a single path
+   (curve + arrowhead) whose stroke-dashoffset is animated from its full length to 0, so it
+   looks hand-sketched onto the page rather than simply fading in */
+.arrow
+{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    color: var(--colour-accent);
+    pointer-events: none;
+    z-index: 2;
+}
+
+.arrowPath,
+.arrowPathRough
+{
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0;
+    transition: stroke-dashoffset 0.6s ease, opacity 0.25s ease;
+}
+
+/* faint offset twin behind the main stroke, mimicking the badge bubble's double-line sketch look */
+.arrowPathRough
+{
+    stroke-width: 1.75;
+    opacity: 0;
+    transform: translate(1.2px, 2px);
+    filter: url(#sketchRough);
+}
+
+.arrowVisible .arrowPath
+{
+    opacity: 0.9;
+}
+
+.arrowVisible .arrowPathRough
+{
+    opacity: 0.45;
+}
+
+@media (max-width: 990px)
+{
+    .arrow
+    {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce)
+{
+    .heroCta::before,
+    .arrowPath,
+    .arrowPathRough
+    {
+        transition: none;
+    }
+}
+
+.scrollHint
+{
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-1);
+    text-decoration: none;
+    cursor: pointer;
+    width: fit-content;
+    position: fixed;
+    right: var(--space-6);
+    bottom: var(--space-6);
+    z-index: 30;
+    transition: opacity 280ms ease, transform 280ms ease;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.scrollHintHidden
+{
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+    pointer-events: none;
+}
+
+.chev
+{
+    font-size: 20px;
+    color: var(--colour-accent);
+    display: block;
+    animation: chevBounce 1.4s ease-in-out infinite;
+}
+
+.hint
+{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--colour-muted);
+    opacity: 0.95;
+}
+
+@keyframes chevBounce
+{
+    0%
+    {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    50%
+    {
+        transform: translateY(8px);
+        opacity: 0.6;
+    }
+    100%
+    {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce)
+{
+    .chev
+    {
+        animation: none;
+    }
+    .scrollHint
+    {
+        transition: none;
+    }
 }
 
 @keyframes heroFadeIn
@@ -164,45 +456,6 @@
     {
         animation: none;
     }
-}
-
-.ctaPrimary,
-.ctaSecondary
-{
-    font-family: var(--font-mono);
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    text-decoration: none;
-    border-radius: var(--radius-pill);
-    padding: var(--space-2) var(--space-5);
-}
-
-.ctaPrimary
-{
-    color: var(--colour-accent-ink);
-    background: var(--colour-accent);
-    border: 1px solid var(--colour-accent);
-}
-
-.ctaPrimary:hover,
-.ctaPrimary:focus-visible
-{
-    opacity: 0.9;
-}
-
-.ctaSecondary
-{
-    color: var(--colour-ink);
-    background: transparent;
-    border: 1px solid var(--colour-line);
-}
-
-.ctaSecondary:hover,
-.ctaSecondary:focus-visible
-{
-    border-color: var(--colour-accent);
-    color: var(--colour-accent);
 }
 
 .experience
@@ -250,4 +503,9 @@
 {
     margin-top: var(--space-2);
     max-width: 52ch;
+}
+
+.accentText
+{
+    color: var(--colour-accent);
 }
