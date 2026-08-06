@@ -1,4 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+
 // Technical skill (can be used in multiple projects)
+[Index(nameof(Name), IsUnique = true)]
 public class Skill
 {
     public int Id { get; set; }
