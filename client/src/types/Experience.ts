@@ -1,5 +1,11 @@
 export type tExperienceType = "role" | "education";
 
+export interface IExperienceSkill
+{
+    name: string;
+    category: string;
+}
+
 export interface IExperience
 {
     id: number;
@@ -12,4 +18,5 @@ export interface IExperience
     endDate: string | null;
     summary: string;
     highlights: string[];
+    skills: IExperienceSkill[];
 }

@@ -35,7 +35,12 @@ namespace VintyDev.Api.Controllers
                     StartDate = e.StartDate,
                     EndDate = e.EndDate,
                     Summary = e.Summary,
-                    Highlights = e.Highlights
+                    Highlights = e.Highlights,
+                    Skills = e.ExperienceSkills.Select(es => new ExperienceSkillDto
+                    {
+                        Name = es.Skill.Name,
+                        Category = es.Skill.Category
+                    }).ToList()
                 })
                     .ToListAsync();
 

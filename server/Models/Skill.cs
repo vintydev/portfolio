@@ -10,4 +10,7 @@ public class Skill
     
     // Many-to-many: Links to projects via ProjectSkill
     public List<ProjectSkill> ProjectSkills { get; set; } = new();
+
+    // Many-to-many: Links to experience entries via ExperienceSkill
+    public List<ExperienceSkill> ExperienceSkills { get; set; } = new();
 }

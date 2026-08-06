@@ -9,6 +9,7 @@ public class AppDbContext : DbContext
     public DbSet<ContactMessage> ContactMessages => Set<ContactMessage>();
     public DbSet<Experience> Experiences => Set<Experience>();
     public DbSet<SiteStatus> SiteStatuses => Set<SiteStatus>();
+    public DbSet<ExperienceSkill> ExperienceSkills => Set<ExperienceSkill>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -23,5 +24,17 @@ public class AppDbContext : DbContext
             .HasOne(ps => ps.Skill)
             .WithMany(s => s.ProjectSkills)
             .HasForeignKey(ps => ps.SkillId);
+
+        modelBuilder.Entity<ExperienceSkill>().HasKey(es => new { es.ExperienceId, es.SkillId });
+
+        modelBuilder.Entity<ExperienceSkill>()
+            .HasOne(es => es.Experience)
+            .WithMany(e => e.ExperienceSkills)
+            .HasForeignKey(es => es.ExperienceId);
+
+        modelBuilder.Entity<ExperienceSkill>()
+            .HasOne(es => es.Skill)
+            .WithMany(s => s.ExperienceSkills)
+            .HasForeignKey(es => es.SkillId);
     }
 }

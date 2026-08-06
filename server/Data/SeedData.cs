@@ -95,9 +95,53 @@ public static class SeedData
             Highlights = []
         };
 
+        var frontendSkills = new[] { "React Native", "TypeScript", "Kotlin", "Swift", "Flutter" };
+        var backendSkills = new[] { "Node.js", "Firebase", "JSON", "RevenueCat", "REST API Development" };
+        var designSkills = new[] { "Figma" };
+        var toolsSkills = new[] { "GitHub Actions", "GitHub Copilot" };
+
+        foreach (var name in frontendSkills)
+        {
+            var skill = await GetOrCreateSkillAsync(context, name, "Frontend");
+            role.ExperienceSkills.Add(new ExperienceSkill { Skill = skill });
+        }
+
+        foreach (var name in backendSkills)
+        {
+            var skill = await GetOrCreateSkillAsync(context, name, "Backend");
+            role.ExperienceSkills.Add(new ExperienceSkill { Skill = skill });
+        }
+
+        foreach (var name in designSkills)
+        {
+            var skill = await GetOrCreateSkillAsync(context, name, "Design");
+            role.ExperienceSkills.Add(new ExperienceSkill { Skill = skill });
+        }
+
+        foreach (var name in toolsSkills)
+        {
+            var skill = await GetOrCreateSkillAsync(context, name, "Tools");
+            role.ExperienceSkills.Add(new ExperienceSkill { Skill = skill });
+        }
+
         context.Experiences.AddRange(role, bsc, hnd);
 
         await context.SaveChangesAsync();
+    }
+
+    // Skill.Name is uniquely indexed and shared between Projects and Experience, so reuse an
+    // existing row (e.g. "TypeScript" from SeedProjectsAsync) instead of inserting a duplicate
+    private static async Task<Skill> GetOrCreateSkillAsync(AppDbContext context, string name, string category)
+    {
+        var existing = await context.Skills.FirstOrDefaultAsync(s => s.Name == name);
+
+        if (existing is not null)
+            return existing;
+
+        var skill = new Skill { Name = name, Category = category };
+        context.Skills.Add(skill);
+
+        return skill;
     }
 
     private static async Task SeedSiteStatusAsync(AppDbContext context)

@@ -13,4 +13,5 @@ public class ExperienceDto
 	public DateOnly? EndDate { get; init; }
 	public string Summary { get; init; } = string.Empty;
 	public List<string> Highlights { get; init; } = [];
+	public List<ExperienceSkillDto> Skills { get; init; } = [];
 }

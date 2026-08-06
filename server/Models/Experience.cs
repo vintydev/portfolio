@@ -31,4 +31,7 @@ public class Experience
     public string Summary { get; set; } = string.Empty;
 
     public List<string> Highlights { get; set; } = new();
+
+    // Many-to-many: Links to skills via ExperienceSkill
+    public List<ExperienceSkill> ExperienceSkills { get; set; } = new();
 }
