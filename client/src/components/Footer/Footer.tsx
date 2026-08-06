@@ -9,7 +9,7 @@ export function Footer(): ReactElement
         <footer className={styles.footer}>
             <div className={styles.inner}>
                 <p>&copy; {year} Vincenzo R.</p>
-                <a href="mailto:vinnyr1999@googlemail.com">vinnyr1999@googlemail.com</a>
+                <a href="mailto:contact@vinty.dev">contact@vinty.dev</a>
             </div>
         </footer>
     );
