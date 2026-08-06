@@ -7,6 +7,7 @@ public static class SeedData
     {
         await SeedProjectsAsync(context);
         await SeedExperienceAsync(context);
+        await SeedSiteStatusAsync(context);
     }
 
     private static async Task SeedProjectsAsync(AppDbContext context)
@@ -95,6 +96,16 @@ public static class SeedData
         };
 
         context.Experiences.AddRange(role, bsc, hnd);
+
+        await context.SaveChangesAsync();
+    }
+
+    private static async Task SeedSiteStatusAsync(AppDbContext context)
+    {
+        if (await context.SiteStatuses.AnyAsync())
+            return;
+
+        context.SiteStatuses.Add(new SiteStatus { IsLookingForWork = true });
 
         await context.SaveChangesAsync();
     }

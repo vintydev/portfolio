@@ -1,0 +1,90 @@
+.badge
+{
+    position: absolute;
+    top: 20px;
+    left: 57%;
+    translate: -50% 0; /* static centering, kept separate from the animated `transform` below */
+    width: 220px;
+    opacity: 0;
+    animation:
+        appear 0.5s ease-out 0.55s forwards,
+        bob 2.8s ease-in-out 1.05s infinite;
+    pointer-events: none;
+}
+
+.bubble
+{
+    display: block;
+    width: 100%;
+    height: auto;
+    color: var(--colour-accent);
+}
+
+.text
+{
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 46px;
+    text-align: center;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.2;
+    color: var(--colour-accent);
+}
+
+@keyframes bob
+{
+    0%, 100%
+    {
+        transform: rotate(-3deg) translateY(0);
+    }
+    50%
+    {
+        transform: rotate(-1deg) translateY(-6px);
+    }
+}
+
+@keyframes appear
+{
+    from
+    {
+        opacity: 0;
+        transform: scale(0.85) rotate(-3deg);
+    }
+    to
+    {
+        opacity: 1;
+        transform: scale(1) rotate(-3deg);
+    }
+}
+
+/* below this, the heading shrinks/wraps enough that the floating badge risks overlapping the
+   tagline — drop out of absolute positioning into normal flow instead, where it just becomes the
+   first block in the hero, centred directly above the tagline */
+@media (max-width: 990px)
+{
+    .badge
+    {
+        display: block;
+        position: static;
+        translate: none;
+        width: 220px;
+        max-width: 100%;
+        margin: 0 auto var(--space-3);
+    }
+}
+
+@media (prefers-reduced-motion: reduce)
+{
+    .badge
+    {
+        animation: none;
+        opacity: 1;
+        transform: rotate(-3deg);
+    }
+}
