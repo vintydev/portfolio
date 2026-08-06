@@ -7,6 +7,7 @@ public class AppDbContext : DbContext
     public DbSet<Skill> Skills => Set<Skill>();
     public DbSet<ProjectSkill> ProjectSkills => Set<ProjectSkill>();
     public DbSet<ContactMessage> ContactMessages => Set<ContactMessage>();
+    public DbSet<Experience> Experiences => Set<Experience>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

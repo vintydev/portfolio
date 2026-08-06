@@ -14,7 +14,7 @@ export function Header(): ReactElement
                 <Link to="/" className={styles.wordmark}>Vincenzo R.</Link>
                 <nav className={styles.nav}>
                     {showProjects && <Link to="/projects">Projects</Link>}
-                    <a href="#contact">Contact</a>
+                    <a href="#contact" className={styles.contactLink}>Contact</a>
                 </nav>
             </div>
         </header>
