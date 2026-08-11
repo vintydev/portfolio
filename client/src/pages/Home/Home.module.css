@@ -472,8 +472,21 @@
 
 .timeline
 {
+    position: relative;
     margin-top: var(--space-5);
-    border-left: 1px solid var(--colour-line);
+}
+
+/* line sits at the horizontal centre of the 56px marker/logo rail, not the container edge,
+   so both dots and logos read as sitting on the line rather than floating beside it */
+.timeline::before
+{
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 28px;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--colour-line) 0%, var(--colour-line) 85%, transparent 100%);
 }
 
 .projects

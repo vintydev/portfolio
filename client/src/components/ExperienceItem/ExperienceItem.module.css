@@ -19,14 +19,21 @@
     min-width: 0;
 }
 
-/* stand-in for entries with no logo: a small dot sitting near the timeline's connecting line */
-.marker
+/* fixed-width rail so both dots and logos centre on the timeline's connecting line the same way */
+.markerSlot
 {
     flex-shrink: 0;
+    width: 56px;
+    display: flex;
+    justify-content: center;
+}
+
+/* stand-in for entries with no logo: a small dot sitting on the timeline's connecting line */
+.marker
+{
     width: 9px;
     height: 9px;
     margin-top: 10px;
-    margin-left: 4px;
     border-radius: var(--radius-pill);
     background: var(--colour-bg);
     border: 2px solid var(--colour-muted);
@@ -40,11 +47,12 @@
 
 .logo
 {
-    flex-shrink: 0;
+    box-sizing: border-box;
     width: 56px;
     height: 56px;
+    padding: 6px;
     border-radius: var(--radius-sm);
-    object-fit: cover;
+    object-fit: contain;
     background: #ffffff;
     border: 1px solid var(--colour-line);
 }

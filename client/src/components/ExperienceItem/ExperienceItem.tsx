@@ -30,11 +30,13 @@ export function ExperienceItem({ item }: IExperienceItemProps): ReactElement
 
     return (
         <article className={`${styles.item} ${item.endDate === null ? styles.current : ""}`}>
-            {item.logoUrl ? (
-                <img className={styles.logo} src={item.logoUrl} alt="" />
-            ) : (
-                <span className={styles.marker} aria-hidden="true" />
-            )}
+            <div className={styles.markerSlot}>
+                {item.logoUrl ? (
+                    <img className={styles.logo} src={item.logoUrl} alt="" />
+                ) : (
+                    <span className={styles.marker} aria-hidden="true" />
+                )}
+            </div>
             <div className={styles.content}>
                 <p className={styles.dateRange}>{dateRange}</p>
                 <h3 className={styles.organisation}>{item.organisation}</h3>
