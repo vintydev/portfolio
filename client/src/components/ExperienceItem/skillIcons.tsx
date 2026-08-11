@@ -1,15 +1,14 @@
 import type { ReactElement } from "react";
 import {
     SiTypescript, SiReact, SiNodedotjs, SiFirebase, SiDotnet, SiPostgresql,
-    SiFigma, SiKotlin, SiSwift, SiFlutter, SiJson, SiGithubactions, SiGithubcopilot, SiRevenuecat
+    SiFigma, SiKotlin, SiSwift, SiFlutter, SiJson, SiGithubactions, SiGithubcopilot, SiRevenuecat,
+    SiPython, SiScala, SiExpress, SiDocker, SiKubernetes, SiJenkins, SiAnsible, SiGit,
+    SiJunit5, SiBurpsuite, SiOwasp, SiSonarqubeserver
 } from "react-icons/si";
-import { FiCode } from "react-icons/fi";
+import { FiCode, FiCloud } from "react-icons/fi";
 
-// Keyed by the exact Skill.Name stored in the database — extend this as new skills get attached.
-// react-icons renders with fill/stroke: currentColor by default, so these inherit the skill tag's
-// own colour rather than each technology's own brand colour. There's no real icon for "C#" or
-// "REST API Development" in Simple Icons or Devicons (the latter isn't a product/brand at all) —
-// C# is left out to fall back to text-only, "REST API Development" gets a generic code-mark icon.
+
+// Keyed by skill name, returns a ReactElement for the icon to display for that skill
 const skillIcons: Record<string, ReactElement> = {
     "TypeScript": <SiTypescript/>,
     "React": <SiReact/>,
@@ -17,6 +16,7 @@ const skillIcons: Record<string, ReactElement> = {
     "Node.js": <SiNodedotjs/>,
     "Firebase": <SiFirebase/>,
     "ASP.NET Core": <SiDotnet/>,
+    ".NET Core": <SiDotnet/>,
     "PostgreSQL": <SiPostgresql/>,
     "Figma": <SiFigma/>,
     "Kotlin": <SiKotlin/>,
@@ -26,11 +26,24 @@ const skillIcons: Record<string, ReactElement> = {
     "GitHub Actions": <SiGithubactions/>,
     "GitHub Copilot": <SiGithubcopilot/>,
     "RevenueCat": <SiRevenuecat/>,
-    "REST API Development": <FiCode/>
+    "REST API Development": <FiCode/>,
+    "Python": <SiPython/>,
+    "Scala": <SiScala/>,
+    "Express": <SiExpress/>,
+    "Docker": <SiDocker/>,
+    "Kubernetes": <SiKubernetes/>,
+    "Jenkins": <SiJenkins/>,
+    "Ansible": <SiAnsible/>,
+    "Git": <SiGit/>,
+    "JUnit": <SiJunit5/>,
+    "Burp Suite": <SiBurpsuite/>,
+    "OWASP ZAP": <SiOwasp/>,
+    "SonarQube": <SiSonarqubeserver/>,
+    "AWS": <FiCloud/>
 };
 
 // Returns null when no icon is mapped for this skill, so callers can render a text-only tag instead
 export function getSkillIcon(name: string): ReactElement | null
 {
-    return skillIcons[name] ?? null;
+    return skillIcons[name] ?? <FiCode/>;
 }

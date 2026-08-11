@@ -97,38 +97,45 @@ public static class SeedData
             Highlights = []
         };
 
-        var frontendSkills = new[] { "React Native", "TypeScript", "Kotlin", "Swift", "Flutter" };
-        var backendSkills = new[] { "Node.js", "Firebase", "JSON", "RevenueCat", "REST API Development" };
-        var designSkills = new[] { "Figma" };
-        var toolsSkills = new[] { "GitHub Actions", "GitHub Copilot" };
+        await AddSkillsAsync(context, role,
+        [
+            ("React Native", "Frontend"), ("TypeScript", "Frontend"), ("Kotlin", "Frontend"), ("Swift", "Frontend"), ("Flutter", "Frontend"),
+            ("Node.js", "Backend"), ("Firebase", "Backend"), ("JSON", "Backend"), ("RevenueCat", "Backend"), ("REST API Development", "Backend"),
+            ("Figma", "Design"),
+            ("GitHub Actions", "Tools"), ("GitHub Copilot", "Tools")
+        ]);
 
-        foreach (var name in frontendSkills)
-        {
-            var skill = await GetOrCreateSkillAsync(context, name, "Frontend");
-            role.ExperienceSkills.Add(new ExperienceSkill { Skill = skill });
-        }
+        // BSc: Programming Paradigms (Scala), Web Development 2 (Node/Express), DevOps module
+        // (Docker/Kubernetes/Jenkins/Ansible/SonarQube/JUnit/Git), Cloud Platform Development
+        // (AWS), Secure Software Development (Burp Suite/OWASP ZAP)
+        await AddSkillsAsync(context, bsc,
+        [
+            ("Python", "Backend"), ("Node.js", "Backend"), ("Express", "Backend"), ("Java", "Backend"), ("Scala", "Backend"),
+            ("AWS", "Cloud & DevOps"), ("Docker", "Cloud & DevOps"), ("Kubernetes", "Cloud & DevOps"), ("Jenkins", "Cloud & DevOps"),
+            ("Ansible", "Cloud & DevOps"), ("SonarQube", "Cloud & DevOps"), ("Git", "Cloud & DevOps"), ("JUnit", "Cloud & DevOps"),
+            ("Burp Suite", "Security"), ("OWASP ZAP", "Security")
+        ]);
 
-        foreach (var name in backendSkills)
-        {
-            var skill = await GetOrCreateSkillAsync(context, name, "Backend");
-            role.ExperienceSkills.Add(new ExperienceSkill { Skill = skill });
-        }
-
-        foreach (var name in designSkills)
-        {
-            var skill = await GetOrCreateSkillAsync(context, name, "Design");
-            role.ExperienceSkills.Add(new ExperienceSkill { Skill = skill });
-        }
-
-        foreach (var name in toolsSkills)
-        {
-            var skill = await GetOrCreateSkillAsync(context, name, "Tools");
-            role.ExperienceSkills.Add(new ExperienceSkill { Skill = skill });
-        }
+        // HND: Java-based Swing/JDBC and C#/.NET/Visual Basic desktop projects, Databases module
+        // (SQL), OOAD module (UML: Class, Use Case, Sequence, Activity diagrams)
+        await AddSkillsAsync(context, hnd,
+        [
+            ("Java", "Backend"), ("C#", "Backend"), (".NET Core", "Backend"), ("Visual Basic", "Backend"), ("SQL", "Backend"),
+            ("UML (Class, Use Case, Sequence, Activity)", "Design")
+        ]);
 
         context.Experiences.AddRange(role, bsc, hnd);
 
         await context.SaveChangesAsync();
+    }
+
+    private static async Task AddSkillsAsync(AppDbContext context, Experience experience, IEnumerable<(string Name, string Category)> skills)
+    {
+        foreach (var (name, category) in skills)
+        {
+            var skill = await GetOrCreateSkillAsync(context, name, category);
+            experience.ExperienceSkills.Add(new ExperienceSkill { Skill = skill });
+        }
     }
 
     // Skill.Name is uniquely indexed and shared between Projects and Experience, so reuse an
