@@ -21,9 +21,13 @@ export function Home(): ReactElement
     const isLookingForWork = useSiteStatus();
     const showProjects = import.meta.env.DEV || projects.length > 0;
 
+    const roleExperience = experience.filter((item) => item.type === "role");
+    const educationExperience = experience.filter((item) => item.type === "education");
+
     const navItems: ISectionNavItem[] = [
         { id: "hero", label: "Intro" },
         { id: "experience", label: "Experience" },
+        { id: "education", label: "Education" },
         ...(showProjects ? [{ id: "projects", label: "Projects" }] : []),
         { id: "contact", label: "Contact" }
     ];
@@ -279,7 +283,19 @@ export function Home(): ReactElement
 
                 {!isExperienceLoading && !experienceError && (
                     <div className={styles.timeline}>
-                        {experience.map((item) => (
+                        {roleExperience.map((item) => (
+                            <ExperienceItem key={item.id} item={item} />
+                        ))}
+                    </div>
+                )}
+            </section>
+
+            <section id="education" className={`${styles.experience} ${revealedSections["education"] ? styles.revealVisible : styles.reveal}`} aria-labelledby="education-heading">
+                <h2 id="education-heading">Education</h2>
+
+                {!isExperienceLoading && !experienceError && (
+                    <div className={styles.timeline}>
+                        {educationExperience.map((item) => (
                             <ExperienceItem key={item.id} item={item} />
                         ))}
                     </div>
