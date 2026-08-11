@@ -11,6 +11,13 @@
     padding-bottom: 0;
 }
 
+/* On hover of item, highlight the organisation name
+*/
+.item:hover .organisation
+{
+    color: var(--colour-accent);
+}
+
 .content
 {
     display: flex;
@@ -75,11 +82,6 @@
 {
     font-size: 24px;
     transition: color 0.2s ease;
-}
-
-.organisation:hover
-{
-    color: var(--colour-accent);
 }
 
 .role
