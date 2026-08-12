@@ -35,7 +35,7 @@ namespace VintyDev.Api.Controllers
                     StartDate = e.StartDate,
                     EndDate = e.EndDate,
                     Summary = e.Summary,
-                    Highlights = e.Highlights,
+                    Highlights = e.Highlights.OrderBy(h => h.SortOrder).Select(h => h.Text).ToList(),
                     Skills = e.ExperienceSkills.Select(es => new ExperienceSkillDto
                     {
                         Name = es.Skill.Name,

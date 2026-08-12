@@ -30,7 +30,7 @@ public class Experience
     [MaxLength(2000)]
     public string Summary { get; set; } = string.Empty;
 
-    public List<string> Highlights { get; set; } = new();
+    public List<ExperienceHighlight> Highlights { get; set; } = new();
 
     // Many-to-many: Links to skills via ExperienceSkill
     public List<ExperienceSkill> ExperienceSkills { get; set; } = new();
