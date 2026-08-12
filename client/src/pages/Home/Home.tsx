@@ -1,21 +1,27 @@
 import type { ReactElement } from "react";
 import { useEffect, useRef, useState } from "react";
+import { FiGithub, FiLinkedin, FiMail, FiMessageCircle } from "react-icons/fi";
 import { useActiveSection } from "../../hooks/useActiveSection";
 import { useProjects } from "../../hooks/useProjects";
 import { useExperience } from "../../hooks/useExperience";
 import { useSiteStatus } from "../../hooks/useSiteStatus";
+import { usePageMeta } from "../../hooks/usePageMeta";
 import { ProjectCard } from "../../components/ProjectCard/ProjectCard";
 import { ExperienceItem } from "../../components/ExperienceItem/ExperienceItem";
 import { LookingBadge } from "../../components/LookingBadge/LookingBadge";
 import { SectionNav } from "../../components/SectionNav/SectionNav";
 import { ContactForm } from "../../components/ContactForm/ContactForm";
 import { LinkButton } from "../../components/LinkButton/LinkButton";
-import { GitHubIcon, LinkedInIcon, EmailIcon, MessageIcon } from "../../components/LinkButton/icons";
 import type { ISectionNavItem } from "../../components/SectionNav/SectionNav";
 import styles from "./Home.module.css";
 
 export function Home(): ReactElement
 {
+    usePageMeta(
+        "Vincenzo R. | Full-Stack Developer",
+        "Portfolio of Vincenzo R., a full-stack developer specialising in ASP.NET Core and React."
+    );
+
     const { projects, isLoading, error } = useProjects();
     const { experience, isLoading: isExperienceLoading, error: experienceError } = useExperience();
     const isLookingForWork = useSiteStatus();
@@ -66,6 +72,8 @@ export function Home(): ReactElement
     const [heroSize, setHeroSize] = useState({ width: 0, height: 0 });
     const [arrowPath, setArrowPath] = useState("");
     const [arrowLength, setArrowLength] = useState(0);
+
+    const measureArrowRef = useRef<() => void>(() => {});
 
     useEffect(() =>
     {
@@ -121,6 +129,7 @@ export function Home(): ReactElement
             );
         };
 
+        measureArrowRef.current = measure;
         measure();
 
         window.addEventListener("resize", measure);
@@ -200,7 +209,24 @@ export function Home(): ReactElement
             <section id="hero" ref={heroRef} className={styles.hero}>
                 <svg width="0" height="0" aria-hidden="true" focusable="false" className={styles.filterDefs}/>
 
-                {isLookingForWork && <LookingBadge ref={badgeRef} onHoverChange={setIsBadgeHovered} />}
+                {isLookingForWork && (
+                    <LookingBadge
+                        ref={badgeRef}
+                        onHoverChange={(hovering) =>
+                        {
+                            // re-measure right before the arrow is revealed rather than relying on the
+                            // mount-time snapshot, so it reflects the badge's actual settled position
+                            // instead of whatever mid-entrance-animation frame happened to be on screen
+                            // when the page first loaded
+                            if (hovering)
+                            {
+                                measureArrowRef.current();
+                            }
+
+                            setIsBadgeHovered(hovering);
+                        }}
+                    />
+                )}
                 {isLookingForWork && (
                     <svg
                         className={`${styles.arrow} ${isBadgeHovered ? styles.arrowVisible : ""} no-reveal`}
@@ -241,10 +267,10 @@ export function Home(): ReactElement
                     <span className={styles.accentText}> looking for new commercial opportunities.</span>
                 </p>
                 <div ref={ctaRef} className={`${styles.heroCta} ${isBadgeHovered ? styles.ctaHighlighted : ""}`}>
-                    <LinkButton href="https://linkedin.com/in/vincenzo-fabrizio-russo-20277932b" label="LinkedIn" icon={<LinkedInIcon />} external />
-                    <LinkButton href="https://github.com/vintydev" label="GitHub" icon={<GitHubIcon />} external />
-                    <LinkButton href="mailto:contact@vinty.dev" label="Email" icon={<EmailIcon />} />
-                    <LinkButton href="#contact" label="Contact" icon={<MessageIcon />} variant="primary" />
+                    <LinkButton href="https://linkedin.com/in/vincenzo-fabrizio-russo-20277932b" label="LinkedIn" icon={<FiLinkedin />} external />
+                    <LinkButton href="https://github.com/vintydev" label="GitHub" icon={<FiGithub />} external />
+                    <LinkButton href="mailto:contact@vinty.dev" label="Email" icon={<FiMail />} />
+                    <LinkButton href="#contact" label="Contact" icon={<FiMessageCircle />} variant="primary" />
                 </div>
                 <a
                     href="#experience"

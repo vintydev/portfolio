@@ -1,11 +1,17 @@
 import type { ReactElement } from "react";
 import { Navigate } from "react-router-dom";
 import { useProjects } from "../../hooks/useProjects";
+import { usePageMeta } from "../../hooks/usePageMeta";
 import { ProjectCard } from "../../components/ProjectCard/ProjectCard";
 import styles from "./Projects.module.css";
 
 export function Projects(): ReactElement
 {
+    usePageMeta(
+        "Projects | Vincenzo R.",
+        "A selection of projects built by Vincenzo R., spanning full-stack web apps, tools, and experiments."
+    );
+
     const { projects, isLoading, error } = useProjects();
     const showProjects = import.meta.env.DEV || projects.length > 0;
 

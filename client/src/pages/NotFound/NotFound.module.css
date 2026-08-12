@@ -1,0 +1,29 @@
+.notFound
+{
+    max-width: var(--content-max-width);
+    margin-inline: auto;
+    padding: var(--space-7) var(--space-6);
+    min-height: calc(100vh - var(--header-height));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: var(--space-3);
+}
+
+.code
+{
+    font-family: var(--font-mono);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--colour-accent);
+    margin: 0;
+}
+
+.message
+{
+    color: var(--colour-muted);
+    margin: 0 0 var(--space-3);
+}
