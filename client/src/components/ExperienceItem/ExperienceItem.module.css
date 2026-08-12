@@ -44,6 +44,7 @@
     border-radius: var(--radius-pill);
     background: var(--colour-bg);
     border: 2px solid var(--colour-muted);
+    transition: transform 0.3s ease-in-out;
 }
 
 .current .marker
@@ -62,11 +63,47 @@
     object-fit: contain;
     background: #ffffff;
     border: 1px solid var(--colour-line);
+    transition: transform 0.3s ease-in-out;
 }
 
 .current .logo
 {
     border-color: var(--colour-accent);
+}
+
+/* on hover of the item, the marker/logo lifts slightly and bobs, echoing the LookingBadge's
+   hand-drawn float so the timeline feels a little more alive rather than a static list.
+   The scale is set directly here (not just inside the keyframes) so the `transition` above
+   eases it in first; the animation itself only starts once that transition has settled
+   (delay matches its duration), so the float picks up smoothly instead of snapping into place.
+   Ending the hover removes the animation and lets the same transition ease it back out. */
+.item:hover .logo,
+.item:hover .marker
+{
+    transform: scale(1.08);
+    animation: markerFloat 1.6s ease-in-out 0.3s infinite;
+}
+
+@keyframes markerFloat
+{
+    0%, 100%
+    {
+        transform: translateY(0) scale(1.08);
+    }
+    50%
+    {
+        transform: translateY(-4px) scale(1.08);
+    }
+}
+
+@media (prefers-reduced-motion: reduce)
+{
+    .item:hover .logo,
+    .item:hover .marker
+    {
+        animation: none;
+        transform: scale(1.08);
+    }
 }
 
 .dateRange
