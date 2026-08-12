@@ -21,6 +21,7 @@ export function SectionNav({ items }: ISectionNavProps): ReactElement
     return (
         <nav className={styles.nav} aria-label="Page sections">
             <ul className={styles.list}>
+                <span className={styles.thread} aria-hidden="true"/>
                 {items.map((item) => (
                     <li key={item.id}>
                         <a
@@ -47,7 +48,11 @@ export function SectionNav({ items }: ISectionNavProps): ReactElement
                             }}
                         >
                             <span className={styles.label}>{item.label}</span>
-                            <span className={styles.dot} aria-hidden="true"/>
+                            {/* double-stroke wobble, same technique as the LookingBadge's thought-bubble ellipses */}
+                            <svg className={styles.dot} viewBox="0 0 24 24" aria-hidden="true">
+                                <ellipse className={styles.dotShape} cx="12" cy="12.5" rx="7" ry="6.5" transform="rotate(-8 12 12.5)"/>
+                                <ellipse className={styles.dotShape} cx="12.5" cy="11.5" rx="6.5" ry="7" transform="rotate(6 12.5 11.5)"/>
+                            </svg>
                         </a>
                     </li>
                 ))}
