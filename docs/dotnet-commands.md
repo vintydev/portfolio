@@ -1,7 +1,7 @@
-# .NET / EF Core / Postgres versions
+# .NET / EF Core / SQL Server versions
 
 SDK — 10.0.302
-EF Core / Npgsql — ^10.0.10 (pin to match whatever `net{X}.0` the .csproj targets)
+EF Core / Microsoft.EntityFrameworkCore.SqlServer — ^10.0.10 (pin to match whatever `net{X}.0` the .csproj targets)
 
 # Storage Troubleshooting
 ```zsh
@@ -25,7 +25,7 @@ dotnet build
 ### Add a package pinned to your target framework
 ```zsh
 # Only needed if `dotnet add package` grabs a version newer than your TFM supports
-dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL --version 8.0.10
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer --version 10.0.10
 ```
 
 ### Check what's actually installed vs outdated
@@ -77,8 +77,8 @@ dotnet ef migrations list
 # One-time per project
 dotnet user-secrets init
 
-# Set the connection string (matches whatever the Docker container's actual password is)
-dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Port=5432;Database=vintydev;Username=postgres;Password=devdev123"
+# Set the connection string (matches whatever the Docker container's actual SA password is)
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=localhost,1433;Database=vintydev;User Id=sa;Password=DevDev123!;TrustServerCertificate=True"
 
 # See what's set
 dotnet user-secrets list
@@ -87,38 +87,42 @@ dotnet user-secrets list
 dotnet user-secrets remove "Key:Name"
 ```
 
-# Docker / Postgres
+# Docker / SQL Server
 
 ### Container lifecycle
 ```zsh
 # Check status
-docker ps -a --filter name=vinty-pg
+docker ps -a --filter name=vinty-mssql
 
 # Start it (safe — data persists across stop/start)
-docker start vinty-pg
+docker start vinty-mssql
 
 # Stop it
-docker stop vinty-pg
+docker stop vinty-mssql
 ```
 
 #### Optionally
 ```zsh
 # Only if creating fresh (no volume = data lost on `docker rm`)
-docker run --name vinty-pg -e POSTGRES_PASSWORD=devdev123 -e POSTGRES_DB=vintydev -p 5432:5432 -d postgres:16
+# SA password must satisfy SQL Server's complexity policy (8+ chars, 3 of: upper/lower/digit/symbol)
+docker run --name vinty-mssql -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=DevDev123!" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest
+
+# Then create the database once the container's ready (~10s after first start)
+docker exec vinty-mssql /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'DevDev123!' -C -Q "IF DB_ID('vintydev') IS NULL CREATE DATABASE vintydev;"
 ```
 
 ### Check container's actual env (password etc.)
 ```zsh
-docker inspect vinty-pg --format '{{range .Config.Env}}{{println .}}{{end}}' | grep -i postgres
+docker inspect vinty-mssql --format '{{range .Config.Env}}{{println .}}{{end}}' | grep -i mssql
 ```
 
 ### Inspect the database directly
 ```zsh
-# Open psql shell inside the container
-docker exec -it vinty-pg psql -U postgres -d vintydev
+# Open sqlcmd shell inside the container
+docker exec -it vinty-mssql /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'DevDev123!' -C -d vintydev
 
 # One-off: list tables
-docker exec vinty-pg psql -U postgres -d vintydev -c "\dt"
+docker exec vinty-mssql /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'DevDev123!' -C -d vintydev -Q "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES;"
 ```
 
 # Build & Run
@@ -146,8 +150,8 @@ dotnet dev-certs https --trust
 ### NU1202: package X is not compatible with netY.0
 * `dotnet add package` grabbed the newest version, which targets a newer TFM than the project. Re-run with `--version` pinned to match (see Package Troubleshooting above).
 
-### 28P01: password authentication failed for user "postgres"
-* The connection string in user secrets doesn't match the container's actual `POSTGRES_PASSWORD`. Check with `docker inspect` (see above) and update the secret to match — don't change the container's password to match a guess.
+### Login failed for user 'sa'
+* The connection string in user secrets doesn't match the container's actual `MSSQL_SA_PASSWORD`. Check with `docker inspect` (see above) and update the secret to match — don't change the container's password to match a guess.
 
 ### NU1903: known vulnerability in a package
 * Check the advisory for a patched version in the same major line, then add it as a direct `PackageReference` to override the vulnerable transitive one:
