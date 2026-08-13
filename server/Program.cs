@@ -35,14 +35,20 @@ builder.Services.AddSingleton<IContactQueueSender, AzureQueueContactSender>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// Configure the HTTP request pipeline for
+// the database migration and health checks. 
+// This is done before the application starts processing requests
+using (var scope = app.Services.CreateScope())
 {
-    app.MapOpenApi();
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    dbContext.Database.Migrate();
+}
 
-    using var scope = app.Services.CreateScope();
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await SeedData.InitializeAsync(db);
+// If we're in dev, enable OpenAPI
+if(app.Environment.IsDevelopment())
+{
+   app.MapOpenApi();
+   
 }
 
 app.UseHttpsRedirection();
