@@ -41,7 +41,13 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+    // Migrate the database to the latest version. 
+    // This will apply any pending migrations to the database
     dbContext.Database.Migrate();
+
+    // Seed the database with initial data
+    await SeedData.InitializeAsync(dbContext);
 }
 
 // If we're in dev, enable OpenAPI
