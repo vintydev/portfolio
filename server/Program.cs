@@ -12,15 +12,26 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+
+// Add allowed origin for the client application. This is used for CORS configuration
+var allowedOrigin = builder.Configuration["Client:Origin"]
+    ?? throw new InvalidOperationException("Client: Origin is not configured.");
+
+// Add CORS policy to allow requests from the client application
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("DevClient", policy =>
-        policy.WithOrigins("http://localhost:5173")
+    options.AddPolicy("Client", policy =>
+        policy.WithOrigins(allowedOrigin)
               .AllowAnyHeader()
               .AllowAnyMethod());
 });
 
-builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
+
+// Add health checks to the service collection
+// This allows the application to expose a health check endpoint that can be used for monitoring and diagnostics
+builder.Services.AddHealthChecks();
+
+builder.Services.AddSingleton<IContactQueueSender, AzureQueueContactSender>();
 
 var app = builder.Build();
 
@@ -36,10 +47,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors("DevClient");
+app.UseCors("Client");
 
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHealthChecks("/healthz");
 
 app.Run();
