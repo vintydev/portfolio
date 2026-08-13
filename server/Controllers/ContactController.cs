@@ -10,17 +10,16 @@ namespace VintyDev.Api.Controllers
     public class ContactController : ControllerBase
     {
         private readonly AppDbContext _db;
-        private readonly IEmailSender _emailSender;
+        private readonly IContactQueueSender _queueSender;
         private readonly ILogger<ContactController> _logger;
-        private readonly string _notifyEmail;
 
         // Inject DB, email sender, logger, and config
-        public ContactController(AppDbContext db, IEmailSender emailSender, ILogger<ContactController> logger, IConfiguration configuration)
+        public ContactController(AppDbContext db, IContactQueueSender queueSender, ILogger<ContactController> logger)
         {
             _db = db;
-            _emailSender = emailSender;
+            _queueSender = queueSender;
             _logger = logger;
-            _notifyEmail = configuration["Contact:NotifyEmail"] ?? throw new InvalidOperationException("Contact:NotifyEmail is not configured.");
+            
         }
 
 
@@ -46,13 +45,16 @@ namespace VintyDev.Api.Controllers
                 return StatusCode(500, "Failed to save contact message.");
             }
 
-            // Send notification email IEmailSender.SendEmailAsync(email, subject, htmlMessage)
+            // Send the notification email asynchronously, but don't fail the request if it fails
             try
             {
-                var subject = $"New contact from {request.Name}";
-                var body = $"<p><strong>Name:</strong> {request.Name}</p><p><strong>Email:</strong> {request.Email}</p><p>{System.Net.WebUtility.HtmlEncode(request.Message)}</p>";
-
-                await _emailSender.SendEmailAsync(_notifyEmail, subject, body, replyTo: request.Email);
+                // Pass a ContactMessageQueueItem to the queue sender for processing
+                await _queueSender.EnqueueMessageAsync(new ContactMessageQueueItem
+                {
+                    Name = request.Name,
+                    Email = request.Email,
+                    Message = request.Message
+                }, cancellationToken);
             }
             catch (Exception ex)
             {

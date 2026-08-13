@@ -1,0 +1,47 @@
+name: Deploy API
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'server/**'
+      - '!server/VintyDev.ContactFunction/**'
+      - '.github/workflows/deploy-api.yml'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./server
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/vinty-api:${{ github.sha }}
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy to Container Apps
+        uses: azure/CLI@v2
+        with:
+          inlineScript: |
+            az containerapp update \
+              --name vinty-api \
+              --resource-group vinty-dev-rg \
+              --image ghcr.io/${{ github.repository_owner }}/vinty-api:${{ github.sha }}

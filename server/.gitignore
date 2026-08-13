@@ -12,3 +12,6 @@ obj/
 
 # OS
 .DS_Store
+
+# VintyDev.ContactFunction
+/VintyDev.ContactFunction/local.settings.json
