@@ -35,18 +35,14 @@ builder.Services.AddSingleton<IContactQueueSender, AzureQueueContactSender>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline for
-// the database migration and health checks. 
-// This is done before the application starts processing requests
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-    // Migrate the database to the latest version. 
-    // This will apply any pending migrations to the database
-    dbContext.Database.Migrate();
-
-    // Seed the database with initial data
+    // Seed the database with initial data. Migrations are applied in CI
+    // (deploy-api.yml) before this image is deployed, not here — so cold
+    // starts don't pay for a schema-history round-trip to SQL Server on
+    // every boot.
     await SeedData.InitializeAsync(dbContext);
 }
 
