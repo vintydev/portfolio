@@ -4,6 +4,7 @@ import { Header } from "./components/Header/Header";
 import { Footer } from "./components/Footer/Footer";
 import { Home } from "./pages/Home/Home";
 import { Projects } from "./pages/Projects/Projects";
+import { CV } from "./pages/CV/CV";
 import { NotFound } from "./pages/NotFound/NotFound";
 
 export function App(): ReactElement
@@ -15,6 +16,7 @@ export function App(): ReactElement
                 <Routes>
                     <Route path="/" element={<Home/>}/>
                     <Route path="/projects" element={<Projects/>}/>
+                    <Route path="/cv" element={<CV/>}/>
                     <Route path="*" element={<NotFound/>}/>
                 </Routes>
             </main>
