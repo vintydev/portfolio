@@ -26,4 +26,11 @@
     <None Remove="VintyDev.ContactFunction/**" />
   </ItemGroup>
 
+  <!-- Same as above for the test project, which references this project rather than the other way around -->
+  <ItemGroup>
+    <Compile Remove="VintyDev.Api.Tests/**" />
+    <Content Remove="VintyDev.Api.Tests/**" />
+    <None Remove="VintyDev.Api.Tests/**" />
+  </ItemGroup>
+
 </Project>

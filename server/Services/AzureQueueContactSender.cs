@@ -31,8 +31,15 @@ namespace VintyDev.Api.Services
                 throw new InvalidOperationException("Storage: ContactQueueName is not configured.");
             }
 
+            // Ensure the encoding is set to Base64 so Azure can decode the message correctly when it is 
+            // retrieved from the queue
+            var options = new QueueClientOptions
+            {
+                MessageEncoding = QueueMessageEncoding.Base64
+            };
+
             // Initialise the QueueClient with the connection string and queue name
-            _queueClient = new QueueClient(connectionString, queueName);
+            _queueClient = new QueueClient(connectionString, queueName, options);
             _queueClient.CreateIfNotExists();
         }
 
