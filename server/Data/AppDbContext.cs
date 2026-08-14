@@ -42,5 +42,9 @@ public class AppDbContext : DbContext
             .HasOne(h => h.Experience)
             .WithMany(e => e.Highlights)
             .HasForeignKey(h => h.ExperienceId);
+
+        modelBuilder.Entity<ContactMessage>()
+            .Property(cm => cm.Status)
+            .HasConversion<string>(); // Store enum as string in the database
     }
 }

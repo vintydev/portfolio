@@ -19,7 +19,7 @@ namespace VintyDev.Api.Controllers
             _db = db;
             _queueSender = queueSender;
             _logger = logger;
-            
+
         }
 
 
@@ -51,6 +51,7 @@ namespace VintyDev.Api.Controllers
                 // Pass a ContactMessageQueueItem to the queue sender for processing
                 await _queueSender.EnqueueMessageAsync(new ContactMessageQueueItem
                 {
+                    Id = entry.Id, // Available here because the entry has been saved to the database and has an Id assigned
                     Name = request.Name,
                     Email = request.Email,
                     Message = request.Message
@@ -58,8 +59,12 @@ namespace VintyDev.Api.Controllers
             }
             catch (Exception ex)
             {
-                // Don't fail the whole request just because email couldn't be sent — the message is already stored
+
+                // Log the error, update the message status to Failed, and save the error message
                 _logger.LogError(ex, "Failed to send contact notification email for {Email}", request.Email);
+                entry.Status = ContactMessageStatus.Failed;
+                entry.ErrorMessage = ex.Message;
+                await _db.SaveChangesAsync(cancellationToken);
                 return StatusCode(202, "Message received but failed to send notification email.");
             }
 
