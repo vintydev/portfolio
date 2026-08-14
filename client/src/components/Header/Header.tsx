@@ -11,17 +11,18 @@ export function Header(): ReactElement
     const currentRoute: string = location.pathname;
     const isCVRoute: boolean = currentRoute === "/cv";
     const buttonLabel: string = isCVRoute ? "Download CV" : "View CV";
+    const buttonHref: string = isCVRoute ? "/cv/Russo_Vincenzo_CV.pdf" : "/cv";
 
     return (
         <header className={styles.header}>
             <div className={styles.inner}>
                 <Link to="/" className={styles.wordmark}>Vincenzo R.</Link>
                 <LinkButton
-                    href="/cv"
+                    href={buttonHref}
                     label={buttonLabel}
                     icon={isCVRoute ? <FiDownload/> : <FiFileText/>}
                     variant="primary"
-                    download={currentRoute === "/cv" ? "Russo_Vincenzo_CV.pdf" : undefined}
+                    download={isCVRoute ? "Russo_Vincenzo_CV.pdf" : undefined}
                 />
             </div>
         </header>
