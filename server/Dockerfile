@@ -2,7 +2,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 COPY VintyDev.Api.csproj .
-RUN dotnet restore -r linux-x64
+RUN dotnet restore -r linux-x64 -p:PublishReadyToRun=true
 COPY . .
 RUN dotnet publish -c Release -o /app --no-restore \
     -r linux-x64 --self-contained false -p:PublishReadyToRun=true
