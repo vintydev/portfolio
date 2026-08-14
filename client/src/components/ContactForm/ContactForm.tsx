@@ -10,7 +10,7 @@ export function ContactForm(): ReactElement
     {
         return (
             <p className={styles.success} role="status">
-                Thanks &mdash; your message is on its way. I&rsquo;ll get back to you soon.
+                Thanks, I&rsquo;ll get back to you soon!
             </p>
         );
     }
