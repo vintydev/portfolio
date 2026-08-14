@@ -15,7 +15,7 @@ export function Header(): ReactElement
                     label="Download CV"
                     icon={<FiDownload/>}
                     variant="primary"
-                    download="Russo_Vincenzo_CV.pdf"
+                    external={true}
                 />
             </div>
         </header>
