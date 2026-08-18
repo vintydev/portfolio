@@ -31,7 +31,7 @@ jobs:
       - name: Build
         working-directory: client
         env:
-          VITE_API_URL: https://api.vinty.dev
+          VITE_API_URL: ${{ github.event_name == 'pull_request' && 'https://vinty-api-staging.graybay-7e20fe04.uksouth.azurecontainerapps.io' || 'https://api.vinty.dev' }}
         run: npm run build
       - name: Deploy
         id: builddeploy

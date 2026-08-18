@@ -17,11 +17,15 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 var allowedOrigin = builder.Configuration["Client:Origin"]
     ?? throw new InvalidOperationException("Client: Origin is not configured.");
 
+var previewOriginSuffix = builder.Configuration["Client:PreviewOriginSuffix"];
+
 // Add CORS policy to allow requests from the client application
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Client", policy =>
-        policy.WithOrigins(allowedOrigin)
+        policy.SetIsOriginAllowed(origin =>
+                  origin == allowedOrigin ||
+                  (previewOriginSuffix is not null && origin.EndsWith(previewOriginSuffix, StringComparison.OrdinalIgnoreCase)))
               .AllowAnyHeader()
               .AllowAnyMethod());
 });
