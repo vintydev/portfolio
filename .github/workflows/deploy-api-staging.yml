@@ -1,0 +1,74 @@
+name: Deploy API (staging)
+
+# On pull requests touching the API, build and deploy to the staging
+# Container App so the change can be reviewed on a real URL before merge.
+# Deliberately does not run EF Core migrations — staging shares the
+# production database, so only the prod workflow (deploy-api.yml) is
+# allowed to change the schema
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'server/**'
+      - '!server/VintyDev.ContactFunction/**'
+      - '.github/workflows/deploy-api-staging.yml'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./server
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/vinty-api:pr-${{ github.event.number }}
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy to Container Apps
+        uses: azure/CLI@v2
+        with:
+          inlineScript: |
+            az containerapp update \
+              --name vinty-api-staging \
+              --resource-group vinty-dev-rg \
+              --image ghcr.io/${{ github.repository_owner }}/vinty-api:pr-${{ github.event.number }}
+
+      - name: Comment staging URL on PR
+        uses: azure/CLI@v2
+        with:
+          inlineScript: |
+            FQDN=$(az containerapp show \
+              --name vinty-api-staging \
+              --resource-group vinty-dev-rg \
+              --query properties.configuration.ingress.fqdn -o tsv)
+            echo "STAGING_API_URL=https://$FQDN" >> "$GITHUB_ENV"
+
+      - name: Post comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `Staging API deployed: ${process.env.STAGING_API_URL}/healthz`
+            });

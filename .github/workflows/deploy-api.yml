@@ -1,12 +1,16 @@
 name: Deploy API
 
-on:
+
+# On push to main detection,
+# deploy the API to Azure Container Apps.
+# Exclude the ContactFunction folder since it is deployed separately
+on: 
   push:
     branches: [main]
     paths:
       - 'server/**'
       - '!server/VintyDev.ContactFunction/**'
-      - '.github/workflows/deploy-api.yml'
+      - '.github/workflows/deploy-api.yml' 
 
 jobs:
   build-and-deploy:
