@@ -24,7 +24,7 @@
     opacity: 0.35;
 }
 
-.zoomControls.faded:hover,
+.zoomControls.faded:hover
 {
     opacity: 1;
 }
