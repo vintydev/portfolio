@@ -1,33 +1,75 @@
 .cv
 {
-    max-width: var(--content-max-width);
-    margin-inline: auto;
-    padding: var(--space-7) var(--space-6);
+    height: calc(100vh - var(--header-height));
+    position: relative;
+    
 }
 
-.header
+.visuallyHidden
 {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: var(--space-4);
-    margin-bottom: var(--space-5);
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
 }
 
+.viewport
+{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    overscroll-behavior: contain;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    cursor: grab;
+}
 
+.viewport.panning
+{
+    cursor: grabbing;
+    user-select: none;
+}
 
 @keyframes fadeIn
 {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from
+    {
+        opacity: 0;
+    }
+    to
+    {
+        opacity: 1;
+    }
 }
 
-.preview
+.pages
 {
-    width: 100%;
-    height: 80vh;
-    border: 1px solid var(--colour-line);
-    border-radius: var(--radius-md);
-    animation: fadeIn 0.7s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-6);
+    padding-block: var(--space-6);
+    margin-inline: auto;
+    opacity: 0;
+}
+
+.pages.ready
+{
+    animation: fadeIn 0.3s cubic-bezier(0.6, 2, 0.3, 1) forwards;
+}
+
+.pages :global(.react-pdf__Page)
+{
+    box-shadow: var(--shadow-md);
+}
+
+.status
+{
+    padding: var(--space-6);
+    color: var(--colour-muted);
+    text-align: center;
 }
