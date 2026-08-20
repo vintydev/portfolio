@@ -10,6 +10,8 @@ import { useIsScrolling } from "../../hooks/useIsScrolling";
 import { useDebouncedValue } from "../../hooks/useDebouncedValue";
 import { ZoomControls } from "../../components/ZoomControls/ZoomControls";
 import styles from "./CV.module.css";
+import { useFullscreenSupport } from "../../hooks/useFullscreensupport";
+import { useIsMobile } from "../../hooks/useIsMobile";
 
 // Set the workerSrc property for pdfjs to load the PDF worker script for Vite
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -42,6 +44,8 @@ export function CV(): ReactElement
     const isPanning = usePanZoom({ element: viewportElement, zoomBy });
     const isScrolling = useIsScrolling(viewportElement);
     const committedZoom = useDebouncedValue(zoom, 200);
+    const isFullscreenSupported = useFullscreenSupport();
+    const isMobile = useIsMobile();
 
     const readingWidth = Math.min(viewportWidth, MAX_READING_WIDTH);
     const zoomedWidth = readingWidth * committedZoom;
@@ -76,16 +80,25 @@ export function CV(): ReactElement
             return;
         }
 
-        if (document.fullscreenElement)
+        try
         {
-            await document.exitFullscreen();
+            if (document.fullscreenElement)
+            {
+                await document.exitFullscreen();
+                setIsFullscreen(false);
+            }
+            else
+            {
+                await viewportElement.requestFullscreen();
+                setIsFullscreen(true);
+            }
+        }
+        catch
+        {
             setIsFullscreen(false);
         }
-        else
-        {
-            await viewportElement.requestFullscreen();
-            setIsFullscreen(true);
-        }
+
+
     }
 
     return (
@@ -121,16 +134,20 @@ export function CV(): ReactElement
 
             </div>
 
-            <ZoomControls
-                zoom={zoom}
-                canZoomIn={canZoomIn}
-                canZoomOut={canZoomOut}
-                isFullscreen={isFullscreen}
-                onZoomIn={zoomIn}
-                onZoomOut={zoomOut}
-                onToggleFullscreen={HandleToggleFullscreen}
-                isFaded={isScrolling || isPanning}
-            />
+            {!isMobile && (
+
+                <ZoomControls
+                    zoom={zoom}
+                    canZoomIn={canZoomIn}
+                    canZoomOut={canZoomOut}
+                    isFullscreen={isFullscreen}
+                    onZoomIn={zoomIn}
+                    onZoomOut={zoomOut}
+                    onToggleFullscreen={HandleToggleFullscreen}
+                    isFaded={isScrolling || isPanning}
+                    isFullscreenSupported={isFullscreenSupported}
+                />
+            )}
 
         </section>
     );

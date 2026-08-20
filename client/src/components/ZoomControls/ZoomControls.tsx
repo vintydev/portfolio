@@ -12,10 +12,23 @@ interface IZoomControlsProps
     onZoomOut: () => void;
     onToggleFullscreen: () => void;
     isFaded: boolean;
+    isFullscreenSupported: boolean;
 }
 
-export function ZoomControls({ zoom, canZoomIn, canZoomOut, isFullscreen, onZoomIn, onZoomOut, onToggleFullscreen, isFaded}: IZoomControlsProps): ReactElement
+export function ZoomControls(props: IZoomControlsProps): ReactElement
 {
+    const {
+        zoom,
+        canZoomIn,
+        canZoomOut,
+        isFullscreen,
+        onZoomIn,
+        onZoomOut,
+        onToggleFullscreen,
+        isFaded,
+        isFullscreenSupported
+    } = props;
+
     return (
         <div className={`${styles.zoomControls} ${isFaded ? styles.faded : ""}`}>
             <button
@@ -35,14 +48,19 @@ export function ZoomControls({ zoom, canZoomIn, canZoomOut, isFullscreen, onZoom
             >
                 <FiZoomIn />
             </button>
-            <span className={styles.divider} aria-hidden="true" />
-            <button
-                type="button"
-                onClick={onToggleFullscreen}
-                aria-label={isFullscreen ? "Exit fullscreen" : "View fullscreen"}
-            >
-                {isFullscreen ? <FiMinimize /> : <FiMaximize />}
-            </button>
+
+            {isFullscreenSupported && (
+                <>
+                <span className={styles.divider} aria-hidden="true" />
+                    <button
+                        type="button"
+                        onClick={onToggleFullscreen}
+                        aria-label={isFullscreen ? "Exit fullscreen" : "View fullscreen"}
+                    >
+                        {isFullscreen ? <FiMinimize /> : <FiMaximize />}
+                    </button>
+                </>
+            )}
         </div>
     );
 }
