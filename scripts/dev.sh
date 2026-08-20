@@ -1,7 +1,20 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-CONTAINER_NAME="vinty-mssql"
+# Load local config (MSSQL_SA_PASSWORD, DOCKER_NAME, VITE_API_URL) from a gitignored .env, if present
+if [ -f "$(dirname "$0")/../.env" ]; then
+    set -a
+    # shellcheck disable=SC1091
+    source "$(dirname "$0")/../.env"
+    set +a
+fi
+
+if [ -z "${MSSQL_SA_PASSWORD:-}" ]; then
+    echo "MSSQL_SA_PASSWORD is not set. Copy .env.example to .env at the repo root and fill it in." >&2
+    exit 1
+fi
+
+CONTAINER_NAME="${DOCKER_NAME:-vinty-mssql}"
 
 cleanup()
 {
@@ -27,7 +40,7 @@ if ! docker ps --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
     docker start "${CONTAINER_NAME}"
 
     echo "Waiting for SQL Server to accept connections..."
-    until docker exec "${CONTAINER_NAME}" /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'DevDev123!' -C -Q "SELECT 1" >/dev/null 2>&1; do
+    until docker exec "${CONTAINER_NAME}" /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "${MSSQL_SA_PASSWORD}" -C -Q "SELECT 1" >/dev/null 2>&1; do
         sleep 1
     done
 fi
