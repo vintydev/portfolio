@@ -2,7 +2,7 @@
 
 Source for my personal site and CV: [vinty.dev](https://vinty.dev). A React frontend backed by an ASP.NET Core API, with contact form delivery handled asynchronously through a queue-triggered Azure Function rather than inline in the request path.
 
-This document covers the architecture and the reasoning behind it, not just the tech list.
+This document covers the architecture and the reasoning behind the choices made. 
 
 ## Architecture
 
@@ -66,7 +66,7 @@ The Function talks to SQL with a plain `SqlConnection`, not EF Core, it's a sepa
 **Frontend** — `client/`
 - React 19, TypeScript, Vite
 - React Router for client-side routing (Home, Projects, CV)
-- CSS Modules, no component library — layout, panning/zoom on the CV viewer, and section-scroll tracking are hand-rolled hooks (`usePanZoom`, `useZoom`, `useActiveSection`)
+- CSS Modules, no component library > layout, panning/zoom on the CV viewer, and section-scroll tracking are hand-rolled hooks (`usePanZoom`, `useZoom`, `useActiveSection`)
 - `react-pdf` for in-browser CV rendering
 - Thin `fetch` wrapper (`src/api`) rather than a data-fetching library, paired with small hooks per resource (`useProjects`, `useExperience`, `useSiteStatus`)
 
@@ -75,7 +75,7 @@ The Function talks to SQL with a plain `SqlConnection`, not EF Core, it's a sepa
 - EF Core against SQL Server, with `AsNoTracking()` on every read-only query path
 - CORS locked to a configured client origin, plus a suffix match for per-PR static web app preview URLs
 - Health check endpoint (`/healthz`) used by the container platform
-- Migrations are generated locally and applied explicitly in CI, not on application startup — so a cold start doesn't pay for a schema round-trip
+- Migrations are generated locally and applied explicitly in CI, not on application startup, so cold starts don't have to wait for an entire schema initialisation process. 
 
 **Async processing** — `server/VintyDev.ContactFunction/`
 - Isolated-worker Azure Function, queue-triggered
@@ -112,7 +112,7 @@ flowchart TD
 
 Every pull request that touches the API gets its own live staging deployment, a real Container App running the PR's image, commented back onto the PR, and the frontend preview build points at that staging API rather than production. So a full-stack change can be reviewed end to end on a real URL before it merges, without touching the production database. Migrations only ever run on the `main` branch workflow, against the same connection string the running container uses, which keeps staging and production sharing one schema without staging ever being allowed to move it.
 
-API tests run against Azurite (the Azure Storage emulator) so the queue-sending path is tested against something that behaves like the real service, not a mock.
+API tests run against Azurite (the Azure Storage emulator) so the queue-sending path is tested against something that behaves like the real service.
 
 ## Running locally
 
@@ -122,7 +122,7 @@ Requires Docker Desktop, Node, and the .NET 10 SDK.
 npm run dev
 ```
 
-This starts (or creates) the local SQL Server container, waits for it to accept connections, then runs the Vite dev server and the API concurrently via `dotnet watch`.
+This starts (or creates if it does not yet exist) the local SQL Server container, waits for it to accept connections, then runs the Vite dev server and the API concurrently via `dotnet watch`.
 
 ## Project layout
 
