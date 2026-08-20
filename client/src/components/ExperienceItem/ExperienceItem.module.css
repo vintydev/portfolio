@@ -110,7 +110,6 @@
 {
     font-family: var(--font-mono);
     font-size: 13px;
-    text-transform: uppercase;
     letter-spacing: 0.04em;
     color: var(--colour-accent);
 }
@@ -168,7 +167,6 @@
 {
     font-family: var(--font-mono);
     font-size: 12px;
-    text-transform: uppercase;
     letter-spacing: 0.04em;
     color: var(--colour-muted);
 }
@@ -190,7 +188,6 @@
     gap: var(--space-1);
     font-family: var(--font-mono);
     font-size: 12px;
-    text-transform: uppercase;
     letter-spacing: 0.03em;
     padding: var(--space-1) var(--space-2);
     border-radius: var(--radius-pill);

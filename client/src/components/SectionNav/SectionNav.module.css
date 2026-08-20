@@ -83,7 +83,6 @@
 {
     font-family: var(--font-mono);
     font-size: 11px;
-    text-transform: uppercase;
     letter-spacing: 0.04em;
     color: var(--colour-accent);
     opacity: 0;
