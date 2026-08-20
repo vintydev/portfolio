@@ -14,15 +14,24 @@ interface IPanStart
     scrollTop: number;
 }
 
+// Define constants for zoom sensitivity for both wheel and pinch gestures
 const WHEEL_ZOOM_SENSITIVITY = 0.0015;
+const PINCH_ZOOM_SENSITIVITY = 0.01;
 
-// Wires ctrl/cmd + scroll-to-zoom and click-and-drag panning onto a native overflow:auto element. Drag panning
-// works by setting scrollLeft/scrollTop directly, so the browser clamps it to the content's real bounds for
-// free — no manual bounds math needed. Plain wheel/trackpad scroll is left entirely to native scrolling.
+// GetTouchDistance calculates the distance between two touch points
+// used for pinch-to-zoom gestures
+function GetTouchDistance(touches: TouchList): number
+{
+    const [first, second] = [touches[0], touches[1]];
+    return Math.hypot(second.clientX - first.clientX, second.clientY - first.clientY);
+}
+
+// usePanZoom is a custom React hook that enables panning and zooming on a given HTMLDivElement
 export function usePanZoom({ element, zoomBy }: IUsePanZoomOptions): boolean
 {
     const [isPanning, setIsPanning] = useState<boolean>(false);
     const panStart = useRef<IPanStart | null>(null);
+    const pinchDistance = useRef<number | null>(null);
 
     useEffect(() =>
     {
@@ -95,6 +104,57 @@ export function usePanZoom({ element, zoomBy }: IUsePanZoomOptions): boolean
             window.removeEventListener("mouseup", HandleMouseUp);
         };
     }, [element]);
+
+    useEffect(() =>
+    {
+        if (!element)
+        {
+            return;
+        }
+
+        function HandleTouchStart(event: TouchEvent): void
+        {
+            if (event.touches.length === 2)
+            {
+                event.preventDefault();
+                pinchDistance.current = GetTouchDistance(event.touches);
+            }
+        }
+
+        function HandleTouchMove(event: TouchEvent): void
+        {
+            if (event.touches.length !== 2 || pinchDistance.current === null)
+            {
+                return;
+            }
+
+            event.preventDefault();
+            const distance = GetTouchDistance(event.touches);
+            zoomBy((distance - pinchDistance.current) * PINCH_ZOOM_SENSITIVITY);
+            pinchDistance.current = distance;
+        }
+
+        function HandleTouchEnd(event: TouchEvent): void
+        {
+            if (event.touches.length < 2)
+            {
+                pinchDistance.current = null;
+            }
+        }
+
+        element.addEventListener("touchstart", HandleTouchStart, { passive: false });
+        element.addEventListener("touchmove", HandleTouchMove, { passive: false });
+        element.addEventListener("touchend", HandleTouchEnd);
+        element.addEventListener("touchcancel", HandleTouchEnd);
+
+        return () =>
+        {
+            element.removeEventListener("touchstart", HandleTouchStart);
+            element.removeEventListener("touchmove", HandleTouchMove);
+            element.removeEventListener("touchend", HandleTouchEnd);
+            element.removeEventListener("touchcancel", HandleTouchEnd);
+        };
+    }, [element, zoomBy]);
 
     return isPanning;
 }
