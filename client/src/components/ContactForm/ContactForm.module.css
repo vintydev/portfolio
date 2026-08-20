@@ -18,7 +18,6 @@
 {
     font-family: var(--font-mono);
     font-size: 13px;
-    text-transform: uppercase;
     letter-spacing: 0.04em;
     color: var(--colour-muted);
 }
@@ -48,7 +47,6 @@
     align-self: flex-start;
     font-family: var(--font-mono);
     font-size: 14px;
-    text-transform: uppercase;
     letter-spacing: 0.04em;
     color: var(--colour-accent-ink);
     background: var(--colour-accent);
