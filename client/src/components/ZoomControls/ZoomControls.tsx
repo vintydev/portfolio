@@ -1,4 +1,4 @@
-import type { ReactElement } from "react";
+import type { ReactElement, ReactNode } from "react";
 import { FiZoomIn, FiZoomOut, FiMaximize, FiMinimize } from "react-icons/fi";
 import styles from "./ZoomControls.module.css";
 
@@ -13,6 +13,25 @@ interface IZoomControlsProps
     onToggleFullscreen: () => void;
     isFaded: boolean;
     isFullscreenSupported: boolean;
+}
+
+interface IZoomButtonProps
+{
+    onClick: () => void;
+    ariaLabel: string;
+    disabled?: boolean;
+    children: ReactNode;
+}
+
+// ZoomButton is the small icon-only control shared by the three buttons below (zoom out,
+// zoom in, fullscreen toggle)
+function ZoomButton({ onClick, ariaLabel, disabled = false, children }: IZoomButtonProps): ReactElement
+{
+    return (
+        <button type="button" onClick={onClick} disabled={disabled} aria-label={ariaLabel}>
+            {children}
+        </button>
+    );
 }
 
 export function ZoomControls(props: IZoomControlsProps): ReactElement
@@ -31,34 +50,20 @@ export function ZoomControls(props: IZoomControlsProps): ReactElement
 
     return (
         <div className={`${styles.zoomControls} ${isFaded ? styles.faded : ""}`}>
-            <button
-                type="button"
-                onClick={onZoomOut}
-                disabled={!canZoomOut}
-                aria-label="Zoom out"
-            >
+            <ZoomButton onClick={onZoomOut} disabled={!canZoomOut} ariaLabel="Zoom out">
                 <FiZoomOut />
-            </button>
+            </ZoomButton>
             <span className={styles.zoomLevel}>{Math.round(zoom * 100)}%</span>
-            <button
-                type="button"
-                onClick={onZoomIn}
-                disabled={!canZoomIn}
-                aria-label="Zoom in"
-            >
+            <ZoomButton onClick={onZoomIn} disabled={!canZoomIn} ariaLabel="Zoom in">
                 <FiZoomIn />
-            </button>
+            </ZoomButton>
 
             {isFullscreenSupported && (
                 <>
-                <span className={styles.divider} aria-hidden="true" />
-                    <button
-                        type="button"
-                        onClick={onToggleFullscreen}
-                        aria-label={isFullscreen ? "Exit fullscreen" : "View fullscreen"}
-                    >
+                    <span className={styles.divider} aria-hidden="true" />
+                    <ZoomButton onClick={onToggleFullscreen} ariaLabel={isFullscreen ? "Exit fullscreen" : "View fullscreen"}>
                         {isFullscreen ? <FiMinimize /> : <FiMaximize />}
-                    </button>
+                    </ZoomButton>
                 </>
             )}
         </div>

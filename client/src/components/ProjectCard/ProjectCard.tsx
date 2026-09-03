@@ -1,5 +1,6 @@
 import type { ReactElement } from "react";
 import type { IProject } from "../../types/Project";
+import { SkillList, SkillTag } from "../SkillTag/SkillTag";
 import styles from "./ProjectCard.module.css";
 
 interface IProjectCardProps
@@ -14,11 +15,11 @@ export function ProjectCard({ project }: IProjectCardProps): ReactElement
         <article className={styles.card}>
             <h3 className={styles.title}>{project.title}</h3>
             <p className={styles.description}>{project.description}</p>
-            <ul className={styles.skills}>
+            <SkillList>
                 {project.skills.map((skill) => (
-                    <li key={skill} className={styles.skillTag}>{skill}</li>
+                    <SkillTag key={skill} label={skill} />
                 ))}
-            </ul>
+            </SkillList>
             <div className={styles.links}>
                 {project.liveUrl && (
                     <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">Live site</a>
