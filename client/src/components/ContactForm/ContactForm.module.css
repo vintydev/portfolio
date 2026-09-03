@@ -28,7 +28,7 @@
     font: inherit;
     font-family: var(--font-sans);
     color: var(--colour-ink);
-    background: #ffffff;
+    background: var(--colour-surface);
     border: 1px solid var(--colour-line);
     border-radius: var(--radius-sm);
     padding: var(--space-2) var(--space-3);
@@ -42,30 +42,11 @@
     border-color: var(--colour-accent);
 }
 
+/* the pill/colour/hover treatment now comes from the shared Button component;
+   this is the one thing it can't know — its position within this form's flex column */
 .submit
 {
     align-self: flex-start;
-    font-family: var(--font-mono);
-    font-size: 14px;
-    letter-spacing: 0.04em;
-    color: var(--colour-accent-ink);
-    background: var(--colour-accent);
-    border: none;
-    border-radius: var(--radius-pill);
-    padding: var(--space-2) var(--space-5);
-    cursor: pointer;
-}
-
-.submit:hover,
-.submit:focus-visible
-{
-    opacity: 0.9;
-}
-
-.submit:disabled
-{
-    opacity: 0.6;
-    cursor: not-allowed;
 }
 
 .error

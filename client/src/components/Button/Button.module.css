@@ -9,7 +9,10 @@
     border-radius: var(--radius-pill);
     padding: var(--space-2) var(--space-5);
     border: none;
+    text-decoration: none;
     cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease,
+        box-shadow 0.2s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .primary
@@ -17,12 +20,16 @@
     color: var(--colour-accent-ink);
     background: var(--colour-accent);
     border: 1px solid var(--colour-accent);
+    box-shadow: var(--shadow-sm);
 }
 
 .primary:hover:not(:disabled),
 .primary:focus-visible:not(:disabled)
 {
-    opacity: 0.9;
+    background: var(--colour-accent-hover);
+    border-color: var(--colour-accent-hover);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
 }
 
 .secondary
@@ -37,6 +44,13 @@
 {
     border-color: var(--colour-accent);
     color: var(--colour-accent);
+    background: var(--colour-accent-soft);
+}
+
+.button:active:not(:disabled)
+{
+    transform: scale(0.96);
+    box-shadow: none;
 }
 
 .button:disabled

@@ -8,18 +8,21 @@ interface IButtonProps
     label: string;
     icon?: ReactNode;
     variant?: tButtonVariant;
+    type?: "button" | "submit";
     onClick?: () => void;
     disabled?: boolean;
     ariaLabel?: string;
+    className?: string;
 }
 
-// Button is a reusable pill-shaped button, styled to match LinkButton but for in-page actions rather than navigation
-export function Button({ label, icon, variant = "secondary", onClick, disabled = false, ariaLabel }: IButtonProps): ReactElement
+// Button is the shared pill-shaped button; styles live in this module and are reused by
+// LinkButton (an <a> rendering of the same component, for navigation rather than in-page actions)
+export function Button({ label, icon, variant = "secondary", type = "button", onClick, disabled = false, ariaLabel, className }: IButtonProps): ReactElement
 {
     return (
         <button
-            type="button"
-            className={`${styles.button} ${variant === "primary" ? styles.primary : styles.secondary}`}
+            type={type}
+            className={`${styles.button} ${variant === "primary" ? styles.primary : styles.secondary} ${className ?? ""}`}
             onClick={onClick}
             disabled={disabled}
             aria-label={ariaLabel}

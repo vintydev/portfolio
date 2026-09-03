@@ -1,6 +1,7 @@
 import type { ReactElement } from "react";
 import type { IExperience, IExperienceSkill } from "../../types/Experience";
 import { getSkillIcon } from "./skillIcons";
+import { SkillList, SkillTag } from "../SkillTag/SkillTag";
 import styles from "./ExperienceItem.module.css";
 
 interface IExperienceItemProps
@@ -57,14 +58,11 @@ export function ExperienceItem({ item }: IExperienceItemProps): ReactElement
                         {Object.entries(groupSkillsByCategory(item.skills)).map(([category, names]) => (
                             <div key={category} className={styles.skillGroup}>
                                 <span className={styles.skillCategory}>{category}</span>
-                                <ul className={styles.skillList}>
+                                <SkillList>
                                     {names.map((name) => (
-                                        <li key={name} className={styles.skillTag}>
-                                            {getSkillIcon(name)}
-                                            <span>{name}</span>
-                                        </li>
+                                        <SkillTag key={name} label={name} icon={getSkillIcon(name)} />
                                     ))}
-                                </ul>
+                                </SkillList>
                             </div>
                         ))}
                     </div>

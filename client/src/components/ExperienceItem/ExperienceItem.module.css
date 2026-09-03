@@ -61,7 +61,7 @@
     padding: 6px;
     border-radius: var(--radius-sm);
     object-fit: contain;
-    background: #ffffff;
+    background: var(--colour-surface);
     border: 1px solid var(--colour-line);
     transition: transform 0.3s ease-in-out;
 }
@@ -171,34 +171,4 @@
     color: var(--colour-muted);
 }
 
-.skillList
-{
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.skillTag
-{
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-1);
-    font-family: var(--font-mono);
-    font-size: 12px;
-    letter-spacing: 0.03em;
-    padding: var(--space-1) var(--space-2);
-    border-radius: var(--radius-pill);
-    background: var(--colour-bg);
-    border: 1px solid var(--colour-line);
-    color: var(--colour-muted);
-}
-
-.skillTag svg
-{
-    width: 12px;
-    height: 12px;
-    flex-shrink: 0;
-}
+/* the skill list/tag itself is the shared SkillList/SkillTag component (see components/SkillTag) */

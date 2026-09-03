@@ -1,5 +1,6 @@
 import type { ReactElement } from "react";
 import { useContactForm } from "../../hooks/useContactForm";
+import { Button } from "../Button/Button";
 import styles from "./ContactForm.module.css";
 
 export function ContactForm(): ReactElement
@@ -10,7 +11,7 @@ export function ContactForm(): ReactElement
     {
         return (
             <p className={styles.success} role="status">
-                Thanks, I&rsquo;ll get back to you soon!
+                Thanks, I'll get back to you soon!
             </p>
         );
     }
@@ -38,9 +39,13 @@ export function ContactForm(): ReactElement
                 </p>
             )}
 
-            <button type="submit" className={styles.submit} disabled={status === "submitting"}>
-                {status === "submitting" ? "Sending…" : "Send message"}
-            </button>
+            <Button
+                type="submit"
+                variant="primary"
+                className={styles.submit}
+                disabled={status === "submitting"}
+                label={status === "submitting" ? "Sending…" : "Send message"}
+            />
         </form>
     );
 }

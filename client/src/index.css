@@ -1,10 +1,14 @@
 :root
 {
-    --colour-bg: #faf8f5;
+    --colour-bg: oklch(97% 0.006 150);
+    --colour-surface: oklch(99% 0.004 150);
     --colour-ink: #1a1815;
-    --colour-muted: #6b6560;
-    --colour-line: #e5e0d8;
-    --colour-accent: #ff4d1c;
+    --colour-muted: oklch(50% 0.012 150);
+    --colour-line: oklch(88% 0.012 150);
+    --colour-accent: oklch(40% 0.3 150);
+    --colour-accent-hover: oklch(33% 0.09 150);
+    --colour-accent-soft: oklch(93% 0.035 150);
+    --colour-accent-ink: oklch(98% 0.01 130);
     --colour-accent-ink: #ffffff;
 
     --font-serif: "Fraunces", Georgia, serif;
