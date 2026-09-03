@@ -2,11 +2,12 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import { App } from './App.tsx'
+import { logConsoleBanner } from './utils/logConsoleBanner'
 
-// Refreshing (or reopening) the site should always start at the top rather than wherever the
-// browser last had it scrolled to - relying on the browser's scroll restoration is also what let
-// layout-measurement effects elsewhere (e.g. the hero's hand-drawn arrow) run against a scroll
-// position they weren't expecting
+// For curious cats
+logConsoleBanner();
+
+// Disable scroll restoration so that the page always starts at the top when navigating to a new route
 if ("scrollRestoration" in history)
 {
     history.scrollRestoration = "manual";
