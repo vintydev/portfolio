@@ -38,6 +38,15 @@
     line-height: 1.05;
 }
 
+.initial
+{
+    font-style: normal;
+    display: inline-block;
+    transform: skewX(-20deg);
+    transition: transform 0.3s ease;
+    
+}
+
 .nameText
 {
     display: block;
@@ -111,6 +120,16 @@
 {
     max-width: 1em;
     opacity: 1;
+}
+
+.surname:hover
+{
+    font-style: normal;
+}
+
+.surname:hover .initial
+{
+    transform: skewX(0deg);
 }
 
 /* each letter gets a longer delay than the last, so they open up left-to-right on hover.

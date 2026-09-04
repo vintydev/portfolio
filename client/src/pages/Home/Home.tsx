@@ -73,7 +73,7 @@ export function Home(): ReactElement
     const [arrowPath, setArrowPath] = useState("");
     const [arrowLength, setArrowLength] = useState(0);
 
-    const measureArrowRef = useRef<() => void>(() => {});
+    const measureArrowRef = useRef<() => void>(() => { });
 
     useEffect(() =>
     {
@@ -207,7 +207,7 @@ export function Home(): ReactElement
             <SectionNav items={navItems} />
 
             <section id="hero" ref={heroRef} className={styles.hero}>
-                <svg width="0" height="0" aria-hidden="true" focusable="false" className={styles.filterDefs}/>
+                <svg width="0" height="0" aria-hidden="true" focusable="false" className={styles.filterDefs} />
 
                 {isLookingForWork && (
                     <LookingBadge
@@ -251,7 +251,7 @@ export function Home(): ReactElement
                     <span className={styles.nameText}>
                         Vincenzo{" "}
                         <em className={styles.surname}>
-                            R
+                            <span className={styles.initial}>R</span>
                             <span className={styles.dot}>.</span>
                             <span className={styles.tail} aria-hidden="true">
                                 <span className={styles.letter}>u</span>
