@@ -6,7 +6,6 @@
     justify-content: center;
     gap: var(--space-3);
     /* Fill the viewport minus the header so the next section isn't visible until scroll */
-    height: calc(100dvh - var(--header-height));
     min-height: calc(100dvh - var(--header-height));
     max-width: var(--content-max-width);
     margin-inline: auto;
@@ -18,7 +17,6 @@
 {
     .hero
     {
-        height: calc(100vh - var(--header-height));
         min-height: calc(100vh - var(--header-height));
     }
 }

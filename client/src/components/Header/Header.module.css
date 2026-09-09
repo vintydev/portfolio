@@ -22,3 +22,11 @@
     color: var(--colour-ink);
 }
 
+@media (max-width: 420px)
+{
+    .inner
+    {
+        padding-inline: var(--space-3);
+    }
+}
+
